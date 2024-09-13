@@ -22,6 +22,7 @@ export class ProjectService {
   
     return this.http.post(`${this.baseUrl}/task/${projectId}/status`, payload, { headers });
   }
+
   
   
   getAllProjectsAndTasks(): Observable<Project[]> {
@@ -55,6 +56,7 @@ export class ProjectService {
     return this.http.post(`${this.baseUrl}/task`, task, { headers });
   }
   
+
   
   getEmployeesByProjectId(projectId: number): Observable<{ employeeName: string; timeZone: string }[]> {
     const token = localStorage.getItem('token'); 

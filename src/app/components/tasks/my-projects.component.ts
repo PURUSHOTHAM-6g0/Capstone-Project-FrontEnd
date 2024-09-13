@@ -4,6 +4,7 @@ import { ProjectService } from '../../services/create-project.service';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { Project } from '../../Models/project';
 import { Tasks } from '../../Models/task';
+import { ChangeDetectorRef } from '@angular/core'; 
 
 declare var bootstrap: any; 
 
@@ -33,7 +34,7 @@ export class MyProjectsComponent implements OnInit {
   
   assignees: { employeeName: string; timeZone: string }[] = []; 
 
-  constructor(private route: ActivatedRoute, private projectService: ProjectService) {}
+  constructor(private route: ActivatedRoute, private projectService: ProjectService,private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.projectId = Number(this.route.snapshot.paramMap.get('id'));
@@ -104,28 +105,24 @@ export class MyProjectsComponent implements OnInit {
       DueDate: this.newTask.dueDate,
       Status: 0, 
       ProjectId: this.projectId,
-      AssignedTo: this.newTask.assignedTo 
+      AssignedTo: this.newTask.assignedTo  
     };
-
-    
     this.projectService.addTask(taskToAdd).subscribe({
       next: (response) => {
         console.log('Task added successfully', response);
 
-        
+       
         this.todo.push({
-          taskId: response.taskId,
           taskName: this.newTask.taskName,
           taskDescription: this.newTask.taskDescription,
           dueDate: this.newTask.dueDate,
-          status: 'Todo', 
-          priority: 'High', 
+          status: 'Todo',  
+          priority: 'High',  
           assignedTo: this.newTask.assignedTo
         });
 
         
         this.newTask = {
-          taskId: 0,
           taskName: '',
           taskDescription: '',
           dueDate: '',
@@ -133,8 +130,6 @@ export class MyProjectsComponent implements OnInit {
           priority: 'High',
           assignedTo: ''
         };
-
-        
         const modalElement = document.getElementById('addTaskModal');
         if (modalElement) {
           const modalInstance = bootstrap.Modal.getInstance(modalElement);
@@ -148,8 +143,9 @@ export class MyProjectsComponent implements OnInit {
         console.log('Task addition complete');
       }
     });
-  }
 
+  }
+  
   
   mapPriority(status: string): string {
     if (status === 'Todo') return 'High';
